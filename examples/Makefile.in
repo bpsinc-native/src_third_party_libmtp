@@ -36,10 +36,10 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = mtp-connect$(EXEEXT) mtp-detect$(EXEEXT) \
 	mtp-tracks$(EXEEXT) mtp-files$(EXEEXT) mtp-folders$(EXEEXT) \
-	mtp-trexist$(EXEEXT) mtp-playlists$(EXEEXT) \
-	mtp-getplaylist$(EXEEXT) mtp-format$(EXEEXT) \
+	mtp-trexist$(EXEEXT) \
+	mtp-format$(EXEEXT) \
 	mtp-albumart$(EXEEXT) mtp-albums$(EXEEXT) \
-	mtp-newplaylist$(EXEEXT) mtp-emptyfolders$(EXEEXT) \
+	mtp-emptyfolders$(EXEEXT) \
 	mtp-thumb$(EXEEXT) mtp-reset$(EXEEXT) mtp-filetree$(EXEEXT)
 subdir = examples
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -95,18 +95,6 @@ am_mtp_format_OBJECTS = format.$(OBJEXT) util.$(OBJEXT)
 mtp_format_OBJECTS = $(am_mtp_format_OBJECTS)
 mtp_format_LDADD = $(LDADD)
 mtp_format_DEPENDENCIES = ../src/libmtp.la
-am_mtp_getplaylist_OBJECTS = getplaylist.$(OBJEXT) util.$(OBJEXT)
-mtp_getplaylist_OBJECTS = $(am_mtp_getplaylist_OBJECTS)
-mtp_getplaylist_LDADD = $(LDADD)
-mtp_getplaylist_DEPENDENCIES = ../src/libmtp.la
-am_mtp_newplaylist_OBJECTS = newplaylist.$(OBJEXT) util.$(OBJEXT)
-mtp_newplaylist_OBJECTS = $(am_mtp_newplaylist_OBJECTS)
-mtp_newplaylist_LDADD = $(LDADD)
-mtp_newplaylist_DEPENDENCIES = ../src/libmtp.la
-am_mtp_playlists_OBJECTS = playlists.$(OBJEXT) util.$(OBJEXT)
-mtp_playlists_OBJECTS = $(am_mtp_playlists_OBJECTS)
-mtp_playlists_LDADD = $(LDADD)
-mtp_playlists_DEPENDENCIES = ../src/libmtp.la
 am_mtp_reset_OBJECTS = reset.$(OBJEXT) util.$(OBJEXT)
 mtp_reset_OBJECTS = $(am_mtp_reset_OBJECTS)
 mtp_reset_LDADD = $(LDADD)
@@ -140,16 +128,14 @@ SOURCES = $(mtp_albumart_SOURCES) $(mtp_albums_SOURCES) \
 	$(mtp_connect_SOURCES) $(mtp_detect_SOURCES) \
 	$(mtp_emptyfolders_SOURCES) $(mtp_files_SOURCES) \
 	$(mtp_filetree_SOURCES) $(mtp_folders_SOURCES) \
-	$(mtp_format_SOURCES) $(mtp_getplaylist_SOURCES) \
-	$(mtp_newplaylist_SOURCES) $(mtp_playlists_SOURCES) \
+	$(mtp_format_SOURCES) \
 	$(mtp_reset_SOURCES) $(mtp_thumb_SOURCES) \
 	$(mtp_tracks_SOURCES) $(mtp_trexist_SOURCES)
 DIST_SOURCES = $(mtp_albumart_SOURCES) $(mtp_albums_SOURCES) \
 	$(mtp_connect_SOURCES) $(mtp_detect_SOURCES) \
 	$(mtp_emptyfolders_SOURCES) $(mtp_files_SOURCES) \
 	$(mtp_filetree_SOURCES) $(mtp_folders_SOURCES) \
-	$(mtp_format_SOURCES) $(mtp_getplaylist_SOURCES) \
-	$(mtp_newplaylist_SOURCES) $(mtp_playlists_SOURCES) \
+	$(mtp_format_SOURCES) \
 	$(mtp_reset_SOURCES) $(mtp_thumb_SOURCES) \
 	$(mtp_tracks_SOURCES) $(mtp_trexist_SOURCES)
 ETAGS = etags
@@ -294,9 +280,6 @@ mtp_tracks_SOURCES = tracks.c util.c util.h common.h
 mtp_files_SOURCES = files.c util.c util.h common.h
 mtp_folders_SOURCES = folders.c util.c util.h common.h
 mtp_trexist_SOURCES = trexist.c util.c util.h common.h
-mtp_playlists_SOURCES = playlists.c util.c util.h common.h
-mtp_getplaylist_SOURCES = getplaylist.c util.c util.h common.h
-mtp_newplaylist_SOURCES = newplaylist.c util.c util.h common.h
 mtp_format_SOURCES = format.c util.c util.h common.h
 mtp_albumart_SOURCES = albumart.c util.c util.h common.h
 mtp_albums_SOURCES = albums.c util.c util.h common.h
@@ -411,15 +394,6 @@ mtp-folders$(EXEEXT): $(mtp_folders_OBJECTS) $(mtp_folders_DEPENDENCIES) $(EXTRA
 mtp-format$(EXEEXT): $(mtp_format_OBJECTS) $(mtp_format_DEPENDENCIES) $(EXTRA_mtp_format_DEPENDENCIES) 
 	@rm -f mtp-format$(EXEEXT)
 	$(LINK) $(mtp_format_OBJECTS) $(mtp_format_LDADD) $(LIBS)
-mtp-getplaylist$(EXEEXT): $(mtp_getplaylist_OBJECTS) $(mtp_getplaylist_DEPENDENCIES) $(EXTRA_mtp_getplaylist_DEPENDENCIES) 
-	@rm -f mtp-getplaylist$(EXEEXT)
-	$(LINK) $(mtp_getplaylist_OBJECTS) $(mtp_getplaylist_LDADD) $(LIBS)
-mtp-newplaylist$(EXEEXT): $(mtp_newplaylist_OBJECTS) $(mtp_newplaylist_DEPENDENCIES) $(EXTRA_mtp_newplaylist_DEPENDENCIES) 
-	@rm -f mtp-newplaylist$(EXEEXT)
-	$(LINK) $(mtp_newplaylist_OBJECTS) $(mtp_newplaylist_LDADD) $(LIBS)
-mtp-playlists$(EXEEXT): $(mtp_playlists_OBJECTS) $(mtp_playlists_DEPENDENCIES) $(EXTRA_mtp_playlists_DEPENDENCIES) 
-	@rm -f mtp-playlists$(EXEEXT)
-	$(LINK) $(mtp_playlists_OBJECTS) $(mtp_playlists_LDADD) $(LIBS)
 mtp-reset$(EXEEXT): $(mtp_reset_OBJECTS) $(mtp_reset_DEPENDENCIES) $(EXTRA_mtp_reset_DEPENDENCIES) 
 	@rm -f mtp-reset$(EXEEXT)
 	$(LINK) $(mtp_reset_OBJECTS) $(mtp_reset_LDADD) $(LIBS)
@@ -450,11 +424,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/folders.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/format.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getfile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getplaylist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newfolder.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newplaylist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pathutils.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/playlists.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/reset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sendfile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sendtr.Po@am__quote@

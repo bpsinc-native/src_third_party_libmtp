@@ -40,7 +40,9 @@
 #include "ptp.h"
 #include "libusb-glue.h"
 #include "device-flags.h"
+#if 0
 #include "playlist-spl.h"
+#endif
 #include "util.h"
 
 #include <stdlib.h>
@@ -6764,6 +6766,7 @@ int LIBMTP_Set_Track_Name(LIBMTP_mtpdevice_t *device,
   return ret;
 }
 
+#if 0
 /**
  * This function renames a single playlist object file holder.
  * This simply means that the <code>PTP_OPC_ObjectFileName</code>
@@ -6800,6 +6803,7 @@ int LIBMTP_Set_Playlist_Name(LIBMTP_mtpdevice_t *device,
   playlist->name = strdup(newname);
   return ret;
 }
+#endif
 
 /**
  * This function renames a single album.
@@ -7217,6 +7221,7 @@ uint32_t LIBMTP_Create_Folder(LIBMTP_mtpdevice_t *device, char *name,
   return new_id;
 }
 
+#if 0
 /**
  * This creates a new playlist metadata structure and allocates memory
  * for it. Notice that if you add strings to this structure they
@@ -7413,6 +7418,7 @@ LIBMTP_playlist_t *LIBMTP_Get_Playlist(LIBMTP_mtpdevice_t *device, uint32_t cons
 
   return pl;
 }
+#endif
 
 /**
  * This function creates a new abstract list such as a playlist
@@ -7967,6 +7973,7 @@ static int update_abstract_list(LIBMTP_mtpdevice_t *device,
 }
 
 
+#if 0
 /**
  * This routine creates a new playlist based on the metadata
  * supplied. If the <code>tracks</code> field of the metadata
@@ -8065,6 +8072,7 @@ int LIBMTP_Update_Playlist(LIBMTP_mtpdevice_t *device,
 			      metadata->tracks,
 			      metadata->no_tracks);
 }
+#endif
 
 /**
  * This creates a new album metadata structure and allocates memory

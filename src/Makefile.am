@@ -1,9 +1,9 @@
 lib_LTLIBRARIES = libmtp.la
 
 libmtp_la_CFLAGS = @LIBUSB_CFLAGS@
-libmtp_la_SOURCES = libmtp.c unicode.c unicode.h util.c util.h playlist-spl.c \
+libmtp_la_SOURCES = libmtp.c unicode.c unicode.h util.c util.h \
 	gphoto2-endian.h _stdint.h ptp.c ptp.h libusb-glue.h \
-	music-players.h device-flags.h playlist-spl.h
+	music-players.h device-flags.h
 
 if LIBUSB1_COMPILE
 libmtp_la_SOURCES += libusb1-glue.c
