@@ -1,0 +1,49 @@
+Index: src/libusb1-glue.c
+===================================================================
+--- src/libusb1-glue.c	(revision 148519)
++++ src/libusb1-glue.c	(working copy)
+@@ -289,7 +289,6 @@
+ 	   * Check for Still Image Capture class with PIMA 15740 protocol,
+ 	   * also known as PTP
+ 	   */
+-#if 0
+ 	  if (intf->bInterfaceClass == LIBUSB_CLASS_PTP
+ 	      && intf->bInterfaceSubClass == 0x01
+ 	      && intf->bInterfaceProtocol == 0x01) {
+@@ -297,17 +296,9 @@
+ 	      fprintf(dumpfile, "   Found PTP device, check vendor "
+ 		      "extension...\n");
+ 	    }
+-	    /*
+-	     * This is where we may insert code to open a PTP
+-	     * session and query the vendor extension ID to see
+-	     * if it is 0xffffffff, i.e. MTP according to the spec.
+-	     */
+-	    if (was_mtp_extension) {
+-	      libusb_close(devh);
+-	      return 1;
+-	    }
++	    libusb_close(devh);
++	    return 1;
+ 	  }
+-#endif
+ 
+ 	  /*
+ 	   * Next we search for the MTP substring in the interface name.
+@@ -528,14 +519,12 @@
+ 	   * By thomas_-_s: Also append devices that are no MTP but PTP devices
+ 	   * if this is commented out.
+ 	   */
+-	  /*
+ 	  else {
+ 	    // Check whether the device is no USB hub but a PTP.
+-	    if ( dev->config != NULL &&dev->config->interface->altsetting->bInterfaceClass == LIBUSB_CLASS_PTP && dev->descriptor.bDeviceClass != LIBUSB_CLASS_HUB ) {
+-	      *mtp_device_list = append_to_mtpdevice_list(*mtp_device_list, dev, bus->location);
++	    if (desc.bDeviceClass == LIBUSB_CLASS_PTP) {
++	      *mtp_device_list = append_to_mtpdevice_list(*mtp_device_list, dev, libusb_get_bus_number(dev));
+ 	    }
+           }
+-	  */
+         }
+       }
+     }
