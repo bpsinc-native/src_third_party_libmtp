@@ -2808,7 +2808,7 @@ uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc, uint3
 static inline int
 ptp_operation_issupported(PTPParams* params, uint16_t operation)
 {
-	int i=0;
+	uint32_t i=0;
 
 	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
 		if (params->deviceinfo.OperationsSupported[i]==operation)
