@@ -1931,6 +1931,7 @@ ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsi
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 }
 
+#if 0
 uint16_t
 ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 	uint16_t propcode, PTPPropertyValue *value, uint16_t datatype
@@ -2015,6 +2016,7 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 	free (data);
 	return ret;
 }
+#endif
 
 /**
  * ptp_canon_getpartialobject:
