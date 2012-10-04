@@ -84,7 +84,7 @@ static const LIBMTP_device_entry_t mtp_device_table[] = {
 static const int mtp_device_table_size = sizeof(mtp_device_table) / sizeof(LIBMTP_device_entry_t);
 
 // Local functions
-static void init_usb();
+static LIBMTP_error_number_t init_usb();
 static void close_usb(PTP_USB* ptp_usb);
 static int find_interface_and_endpoints(libusb_device *dev,
 					uint8_t *interface,
@@ -125,16 +125,20 @@ int LIBMTP_Get_Supported_Devices_List(LIBMTP_device_entry_t ** const devices, in
 }
 
 
-static void init_usb()
+static LIBMTP_error_number_t init_usb()
 {
   /*
    * Some additional libusb debugging please.
    * We use the same level debug between MTP and USB.
    */
-  libusb_init(NULL);
+  if (libusb_init(NULL) < 0) {
+    LIBMTP_ERROR("Libusb1 init failed\n");
+    return LIBMTP_ERROR_USB_LAYER;
+  }
 
   if ((LIBMTP_debug & LIBMTP_DEBUG_USB) != 0)
     libusb_set_debug(NULL,9);
+  return LIBMTP_ERROR_NONE;
 }
 
 /**
@@ -478,8 +482,11 @@ static LIBMTP_error_number_t get_mtp_usb_device_list(mtpdevice_list_t ** mtp_dev
   ssize_t nrofdevs;
   libusb_device **devs = NULL;
   int ret, i;
+  LIBMTP_error_number_t init_usb_ret;
 
-  init_usb();
+  init_usb_ret = init_usb();
+  if (init_usb_ret != LIBMTP_ERROR_NONE)
+    return init_usb_ret;
 
   nrofdevs = libusb_get_device_list (NULL, &devs);
   for (i = 0; i < nrofdevs ; i++) {
@@ -551,8 +558,11 @@ int LIBMTP_Check_Specific_Device(int busno, int devno)
   ssize_t nrofdevs;
   libusb_device **devs = NULL;
   int i;
+  LIBMTP_error_number_t init_usb_ret;
 
-  init_usb();
+  init_usb_ret = init_usb();
+  if (init_usb_ret != LIBMTP_ERROR_NONE)
+    return 0;
 
   nrofdevs = libusb_get_device_list (NULL, &devs);
   for (i = 0; i < nrofdevs ; i++ ) {
@@ -1904,9 +1914,12 @@ LIBMTP_error_number_t configure_usb_device(LIBMTP_raw_device_t *device,
   ssize_t nrofdevs;
   libusb_device **devs = NULL;
   struct libusb_device_descriptor desc;
+  LIBMTP_error_number_t init_usb_ret;
 
   /* See if we can find this raw device again... */
-  init_usb();
+  init_usb_ret = init_usb();
+  if (init_usb_ret != LIBMTP_ERROR_NONE)
+    return init_usb_ret;
 
   nrofdevs = libusb_get_device_list (NULL, &devs);
   for (i = 0; i < nrofdevs ; i++) {
