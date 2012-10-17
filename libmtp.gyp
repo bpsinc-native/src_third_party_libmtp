@@ -11,7 +11,7 @@
       'targets': [
         {
           'target_name': 'libmtp',
-          'type': 'static_library',
+          'type': 'shared_library',
           'product_name': 'mtp',
           'dependencies': [
             '../../third_party/libusb/libusb.gyp:libusb',
