@@ -45,6 +45,8 @@
 #endif
 #include "util.h"
 
+#include "mtpz.h"
+
 #include <stdlib.h>
 #include <limits.h>
 #include <unistd.h>
@@ -72,14 +74,17 @@
  * The value "-1" enables all debug flags.
  *
  * Some of the utilities in examples/ also take a command-line flag "-d" that
- * enables all debug flags, as if you had set LIBMTP_DEBUG=-1.
+ * enables LIBMTP_DEBUG_PTP and LIBMTP_DEBUG_DATA (same as setting
+ * LIBMTP_DEBUG=9).
  *
  * Flags (combine by adding the hex values):
- *  0x00 [0000 0000] : no debug (default)
- *  0x01 [0000 0001] : PTP debug
- *  0x02 [0000 0010] : Playlist debug
- *  0x04 [0000 0100] : USB debug
- *  0x08 [0000 1000] : USB data debug
+ *  0x00 [0000 0000] : LIBMTP_DEBUG_NONE  : no debug (default)
+ *  0x01 [0000 0001] : LIBMTP_DEBUG_PTP   : PTP debug
+ *  0x02 [0000 0010] : LIBMTP_DEBUG_PLST  : Playlist debug
+ *  0x04 [0000 0100] : LIBMTP_DEBUG_USB   : USB debug
+ *  0x08 [0000 1000] : LIBMTP_DEBUG_DATA  : USB data debug
+ *
+ * (Please keep this list in sync with libmtp.h.)
  */
 int LIBMTP_debug = LIBMTP_DEBUG_NONE;
 
@@ -752,7 +757,7 @@ void LIBMTP_Set_Debug(int level)
  * Never re-initialize libmtp!
  *
  * The only thing this does at the moment is to initialise the
- * filetype mapping table.
+ * filetype mapping table, as well as load MTPZ data if necessary.
  */
 void LIBMTP_Init(void)
 {
@@ -770,6 +775,12 @@ void LIBMTP_Init(void)
 
   init_filemap();
   init_propertymap();
+
+  if (mtpz_loaddata() == -1)
+    use_mtpz = 0;
+  else
+    use_mtpz = 1;
+
   return;
 }
 
@@ -2087,6 +2098,24 @@ LIBMTP_mtpdevice_t *LIBMTP_Open_Raw_Device(LIBMTP_raw_device_t *rawdevice)
   if (mtp_device == NULL)
     return NULL;
 
+  /* Check for MTPZ devices. */
+  if (use_mtpz) {
+    LIBMTP_device_extension_t *tmpext = mtp_device->extensions;
+
+    while (tmpext != NULL) {
+      if (!strcmp(tmpext->name, "microsoft.com/MTPZ")) {
+	LIBMTP_INFO("MTPZ device detected. Authenticating...\n");
+        if (PTP_RC_OK == ptp_mtpz_handshake(mtp_device->params)) {
+	  LIBMTP_INFO ("(MTPZ) Successfully authenticated with device.\n");
+        } else {
+          LIBMTP_INFO ("(MTPZ) Failure - could not authenticate with device.\n");
+        }
+	break;
+      }
+      tmpext = tmpext->next;
+    }
+  }
+
   // Set up this device as cached
   mtp_device->cached = 1;
   /*
@@ -2105,10 +2134,11 @@ LIBMTP_mtpdevice_t *LIBMTP_Open_Raw_Device(LIBMTP_raw_device_t *rawdevice)
  * @param device a pointer to the MTP device to poll for events.
  * @param event contains a pointer to be filled in with the event retrieved if the call
  * is successful.
+ * @param out1 contains the param1 value from the raw event.
  * @return 0 on success, any other value means the polling loop shall be
  * terminated immediately for this session.
  */
-int LIBMTP_Read_Event(LIBMTP_mtpdevice_t *device, LIBMTP_event_t *event)
+int LIBMTP_Read_Event(LIBMTP_mtpdevice_t *device, LIBMTP_event_t *event, uint32_t *out1)
 {
   /*
    * FIXME: Potential race-condition here, if client deallocs device
@@ -2159,6 +2189,8 @@ int LIBMTP_Read_Event(LIBMTP_mtpdevice_t *device, LIBMTP_event_t *event)
     case PTP_EC_StoreAdded:
       LIBMTP_INFO("Received event PTP_EC_StoreAdded in session %u\n", session_id);
       /* TODO: rescan storages */
+      *event = LIBMTP_EVENT_STORE_ADDED;
+      *out1 = param1;
       break;
     case PTP_EC_StoreRemoved:
       LIBMTP_INFO("Received event PTP_EC_StoreRemoved in session %u\n", session_id);
@@ -8784,6 +8816,24 @@ int LIBMTP_Get_Representative_Sample(LIBMTP_mtpdevice_t *device,
         get_u16_from_object(device, id, PTP_OPC_RepresentativeSampleFormat, LIBMTP_FILETYPE_UNKNOWN));
 
   return 0;
+}
+
+/**
+ * Retrieve the thumbnail for a file.
+ * @param device a pointer to the device to get the thumbnail from.
+ * @param id the object ID of the file to retrieve the thumbnail for.
+ * @return 0 on success, any other value means failure.
+ */
+int LIBMTP_Get_Thumbnail(LIBMTP_mtpdevice_t *device, uint32_t const id,
+                         unsigned char **data, unsigned int *size)
+{
+  PTPParams *params = (PTPParams *) device->params;
+  uint16_t ret;
+
+  ret = ptp_getthumb(params, id, data, size);
+  if (ret == PTP_RC_OK)
+      return 0;
+  return -1;
 }
 
 /**

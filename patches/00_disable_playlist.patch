@@ -188,8 +188,8 @@ Index: src/Makefile.am
 -libmtp_la_SOURCES = libmtp.c unicode.c unicode.h util.c util.h playlist-spl.c \
 +libmtp_la_SOURCES = libmtp.c unicode.c unicode.h util.c util.h \
  	gphoto2-endian.h _stdint.h ptp.c ptp.h libusb-glue.h \
--	music-players.h device-flags.h playlist-spl.h
-+	music-players.h device-flags.h
+-	music-players.h device-flags.h playlist-spl.h mtpz.h
++	music-players.h device-flags.h mtpz.h
  
  if LIBUSB1_COMPILE
  libmtp_la_SOURCES += libusb1-glue.c
@@ -218,7 +218,7 @@ Index: src/Makefile.in
 ===================================================================
 --- src/Makefile.in	(revision 148515)
 +++ src/Makefile.in	(working copy)
-@@ -85,15 +85,15 @@
+@@ -85,16 +85,16 @@
  LTLIBRARIES = $(lib_LTLIBRARIES)
  am__DEPENDENCIES_1 =
  am__libmtp_la_SOURCES_DIST = libmtp.c unicode.c unicode.h util.c \
@@ -226,17 +226,18 @@ Index: src/Makefile.in
 -	libusb-glue.h music-players.h device-flags.h playlist-spl.h \
 +	util.h gphoto2-endian.h _stdint.h ptp.c ptp.h \
 +	libusb-glue.h music-players.h device-flags.h \
- 	libusb1-glue.c libusb-glue.c libopenusb1-glue.c
- @LIBUSB1_COMPILE_TRUE@am__objects_1 = libmtp_la-libusb1-glue.lo
- @LIBUSB0_COMPILE_TRUE@am__objects_2 = libmtp_la-libusb-glue.lo
- @LIBOPENUSB_COMPILE_TRUE@am__objects_3 =  \
+ 	mtpz.h mtpz.c libusb1-glue.c libusb-glue.c libopenusb1-glue.c
+ @MTPZ_COMPILE_TRUE@am__objects_1 = libmtp_la-mtpz.lo
+ @LIBUSB1_COMPILE_TRUE@am__objects_2 = libmtp_la-libusb1-glue.lo
+ @LIBUSB0_COMPILE_TRUE@am__objects_3 = libmtp_la-libusb-glue.lo
+ @LIBOPENUSB_COMPILE_TRUE@am__objects_4 =  \
  @LIBOPENUSB_COMPILE_TRUE@	libmtp_la-libopenusb1-glue.lo
  am_libmtp_la_OBJECTS = libmtp_la-libmtp.lo libmtp_la-unicode.lo \
 -	libmtp_la-util.lo libmtp_la-playlist-spl.lo libmtp_la-ptp.lo \
 +	libmtp_la-util.lo libmtp_la-ptp.lo \
- 	$(am__objects_1) $(am__objects_2) $(am__objects_3)
+ 	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
+ 	$(am__objects_4)
  libmtp_la_OBJECTS = $(am_libmtp_la_OBJECTS)
- libmtp_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 @@ -252,8 +252,8 @@
  lib_LTLIBRARIES = libmtp.la
  libmtp_la_CFLAGS = @LIBUSB_CFLAGS@
@@ -245,13 +246,13 @@ Index: src/Makefile.in
 -	libusb-glue.h music-players.h device-flags.h playlist-spl.h \
 +	gphoto2-endian.h _stdint.h ptp.c ptp.h \
 +	libusb-glue.h music-players.h device-flags.h \
- 	$(am__append_1) $(am__append_2) $(am__append_3)
+ 	mtpz.h $(am__append_1) $(am__append_2) $(am__append_3) \
+ 	$(am__append_4)
  include_HEADERS = libmtp.h
- EXTRA_DIST = libmtp.h.in libmtp.sym ptp-pack.c
-@@ -372,7 +372,6 @@
- @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmtp_la-libopenusb1-glue.Plo@am__quote@
+@@ -373,7 +373,6 @@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmtp_la-libusb-glue.Plo@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmtp_la-libusb1-glue.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmtp_la-mtpz.Plo@am__quote@
 -@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmtp_la-playlist-spl.Plo@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmtp_la-ptp.Plo@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmtp_la-unicode.Plo@am__quote@

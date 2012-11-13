@@ -65,6 +65,8 @@ typedef unsigned __int64 uint64_t;
 /**
  * The debug flags defined here are the external flags used
  * by the libmtp library interface.
+ *
+ * Please keep this list in sync with libmtp.c.
  */
 #define LIBMTP_DEBUG_NONE		0x00
 #define LIBMTP_DEBUG_PTP		0x01
@@ -768,6 +770,7 @@ struct LIBMTP_devicestorage_struct {
  */
 enum LIBMTP_event_enum {
   LIBMTP_EVENT_NONE,
+  LIBMTP_EVENT_STORE_ADDED,
 };
 typedef enum LIBMTP_event_enum LIBMTP_event_t;
 
@@ -913,6 +916,8 @@ int LIBMTP_Send_Representative_Sample(LIBMTP_mtpdevice_t *, uint32_t const,
                           LIBMTP_filesampledata_t *);
 int LIBMTP_Get_Representative_Sample(LIBMTP_mtpdevice_t *, uint32_t const,
                           LIBMTP_filesampledata_t *);
+int LIBMTP_Get_Thumbnail(LIBMTP_mtpdevice_t *, uint32_t const,
+                         unsigned char **data, unsigned int *size);
 
 /**
  * @}
@@ -1008,7 +1013,7 @@ int LIBMTP_Set_Object_Filename(LIBMTP_mtpdevice_t *, uint32_t , char *);
  * @defgroup files The events API.
  * @{
  */
-int LIBMTP_Read_Event(LIBMTP_mtpdevice_t *, LIBMTP_event_t *);
+int LIBMTP_Read_Event(LIBMTP_mtpdevice_t *, LIBMTP_event_t *, uint32_t *);
 
 
 /** @} */

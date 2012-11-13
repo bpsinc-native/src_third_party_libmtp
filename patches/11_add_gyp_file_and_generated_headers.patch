@@ -159,7 +159,7 @@ Index: config.h
 +#define PACKAGE_NAME "libmtp"
 +
 +/* Define to the full name and version of this package. */
-+#define PACKAGE_STRING "libmtp 1.1.4"
++#define PACKAGE_STRING "libmtp 1.1.5"
 +
 +/* Define to the one symbol short name of this package. */
 +#define PACKAGE_TARNAME "libmtp"
@@ -168,7 +168,7 @@ Index: config.h
 +#define PACKAGE_URL ""
 +
 +/* Define to the version of this package. */
-+#define PACKAGE_VERSION "1.1.4"
++#define PACKAGE_VERSION "1.1.5"
 +
 +/* Define as the return type of signal handlers (`int' or `void'). */
 +#define RETSIGTYPE void
@@ -180,10 +180,10 @@ Index: config.h
 +#define TIME_WITH_SYS_TIME 1
 +
 +/* Enable MTPZ functionality */
-+#define USE_MTPZ /**/
++/* #undef USE_MTPZ */
 +
 +/* Version number of package */
-+#define VERSION "1.1.4"
++#define VERSION "1.1.5"
 +
 +/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
 +   significant byte first (like Motorola and SPARC, unlike Intel). */
@@ -441,7 +441,7 @@ Index: src/libmtp.h
 ===================================================================
 --- src/libmtp.h	(revision 0)
 +++ src/libmtp.h	(revision 0)
-@@ -0,0 +1,1023 @@
+@@ -0,0 +1,1026 @@
 +/**
 + * \file libmtp.h
 + * Interface to the Media Transfer Protocol library.
@@ -473,8 +473,8 @@ Index: src/libmtp.h
 +#ifndef LIBMTP_H_INCLUSION_GUARD
 +#define LIBMTP_H_INCLUSION_GUARD
 +
-+#define LIBMTP_VERSION 1.1.4
-+#define LIBMTP_VERSION_STRING "1.1.4"
++#define LIBMTP_VERSION 1.1.5
++#define LIBMTP_VERSION_STRING "1.1.5"
 +
 +/* This handles MSVC pecularities */
 +#ifdef _MSC_VER
@@ -1214,6 +1214,7 @@ Index: src/libmtp.h
 + */
 +enum LIBMTP_event_enum {
 +  LIBMTP_EVENT_NONE,
++  LIBMTP_EVENT_STORE_ADDED,
 +};
 +typedef enum LIBMTP_event_enum LIBMTP_event_t;
 +
@@ -1359,6 +1360,8 @@ Index: src/libmtp.h
 +                          LIBMTP_filesampledata_t *);
 +int LIBMTP_Get_Representative_Sample(LIBMTP_mtpdevice_t *, uint32_t const,
 +                          LIBMTP_filesampledata_t *);
++int LIBMTP_Get_Thumbnail(LIBMTP_mtpdevice_t *, uint32_t const,
++                         unsigned char **data, unsigned int *size);
 +
 +/**
 + * @}
@@ -1454,7 +1457,7 @@ Index: src/libmtp.h
 + * @defgroup files The events API.
 + * @{
 + */
-+int LIBMTP_Read_Event(LIBMTP_mtpdevice_t *, LIBMTP_event_t *);
++int LIBMTP_Read_Event(LIBMTP_mtpdevice_t *, LIBMTP_event_t *, uint32_t *);
 +
 +
 +/** @} */

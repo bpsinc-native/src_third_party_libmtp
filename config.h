@@ -154,7 +154,7 @@
 #define PACKAGE_NAME "libmtp"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libmtp 1.1.4"
+#define PACKAGE_STRING "libmtp 1.1.5"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libmtp"
@@ -163,7 +163,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.1.4"
+#define PACKAGE_VERSION "1.1.5"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -175,10 +175,10 @@
 #define TIME_WITH_SYS_TIME 1
 
 /* Enable MTPZ functionality */
-#define USE_MTPZ /**/
+/* #undef USE_MTPZ */
 
 /* Version number of package */
-#define VERSION "1.1.4"
+#define VERSION "1.1.5"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
